@@ -1,0 +1,4 @@
+singleton Theme 1.0 Theme.qml
+Border 1.0 Border.qml
+Bar 1.0 Bar.qml
+TopBar 1.0 TopBar.qml
