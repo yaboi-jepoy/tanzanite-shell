@@ -1,65 +1,69 @@
 import Quickshell
-import Quickshell.Wayland
 import QtQuick
-import QtQuick.Shapes
-import "./components"
+import QtQuick.Layouts
+import "./widgets" as Widgets
 
 PanelWindow {
-    id: barWindow
-    property int barHeight: 18
-    property int cornerRadius: 12
-    property int borderThickness: 6
-    property color barColor: Theme.bgMain
-    property color borderColor: Theme.bgMain
-    color: "transparent"
-    anchors.bottom: true
-    anchors.left: true
-    anchors.right: true
-    implicitHeight: borderThickness + barHeight + cornerRadius
-    exclusiveZone: borderThickness + barHeight
+    id: root
+    required property var modelData
+    screen: root.modelData
 
-    Item {
+    property var borderRadius: 8
+    property var borderColor: Theme.bgMain
+    property var borderWidth: 1
+    property var sectionColor: Theme.fgMain
+    
+    anchors {
+        bottom: true
+        left: true
+        right: true
+    }
+
+    implicitHeight: 25
+    color: Theme.bgMain
+    
+    // Right side
+    RowLayout {
         anchors.fill: parent
+        spacing: 10
 
-        Rectangle {
-            id: borderStrip
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: barWindow.borderThickness
-            color: barWindow.borderColor
-            z: 0
+        Item {
+            Layout.fillWidth: true
         }
 
         Rectangle {
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: barWindow.borderThickness + barWindow.barHeight
-            color: barWindow.borderColor
-            z: 1
+            id: systemSection
+            Layout.fillHeight: true
+            implicitWidth: systemContent.implicitWidth + 16
+            
+            RowLayout {
+                id: systemContent
+                anchors.centerIn: parent
+                spacing: 4
+
+                Widgets.Network {}
+                Widgets.Battery {}
+                Widgets.Sound {}
+            }
         }
 
-        ConcaveCurves {
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.bottomMargin: barWindow.borderThickness + barWindow.barHeight
-            radius: barWindow.cornerRadius
-            color: barWindow.barColor
-            isTop: false
-            z: 1
-        }
+        Rectangle {
+            id: clockSection
+            // color: sectionColor
+            // border.color: borderColor
+            // border.width: borderWidth
+            // radius: borderRadius
 
-        ConcaveCurves {
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.bottomMargin: barWindow.borderThickness + barWindow.barHeight
-            radius: barWindow.cornerRadius
-            color: barWindow.barColor
-            isTop: false
-            mirrored: true
-            z: 1
+            Layout.fillHeight: true
+            implicitWidth: timeContent.implicitWidth + 16
+
+            RowLayout{
+                id: timeContent
+                anchors.centerIn: parent
+
+                Widgets.Clock {}
+            }
         }
     }
+
 }
